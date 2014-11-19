@@ -1,0 +1,68 @@
+if [ "$osx" = 1 ]; then
+  alias firefox='/Applications/Firefox.app/Contents/MacOS/firefox-bin'
+  alias nightly='/Applications/FirefoxNightly.app/Contents/MacOS/firefox-bin'
+  alias profiles='cd /Users/mozilla/Library/Application\ Support/Firefox/Profiles'
+fi
+
+# My default banch to work on.
+MOZ_BRANCH='fx-team'
+
+# Requires https://github.com/neojski/moz-git-tools/tree/git-branch-to-patch
+export PATH=$PATH:"$HOME/moz-git-tools"
+
+# Alias to work on fx-team.
+alias patch='git-branch-to-patch --directory="$HOME" "$MOZ_BRANCH"'
+
+# git diff 'list' -- show only list of changed files
+alias gdl='git diff --name-only'
+
+# paths
+MOZ="$HOME/gecko-dev"
+alias moz="cd $MOZ/$1"
+
+# mach
+# TODO: Since both firefox and servo use mach create a tiny mach command that
+# runs ./mach in the nearest ancestor directory.
+# tab completion (https://developer.mozilla.org/en-US/docs/Mozilla/Developer_guide/mach)
+autoload bashcompinit
+bashcompinit
+source "$MOZ/python/mach/bash-completion.sh"
+# Env variable required by mach-watch
+export MACH_COMMAND="$MOZ/mach"
+alias mach="$MACH_COMMAND" # mach autocompletion does not work if ~. TODO: investigate why.
+# requires https://github.com/neojski/mach-watch
+alias mach-watch='~/mach-watch/mach-watch ~/gecko-dev'
+alias mach-autobuild='~/mach-watch/mach-autobuild'
+# Build all
+alias mach-autobuild-git='moz && mach-autobuild $(gdl "$MOZ_BRANCH" | xargs) && cd -'
+alias mach-declobber='touch /Users/mozilla/gecko-dev/obj-ff-dbg/config.status && touch /Users/mozilla/gecko-dev/obj-ff-dbg/CLOBBER && touch "/Users/mozilla/gecko-dev/configure" && touch "/Users/mozilla/gecko-dev/js/src/configure" && touch "/Users/mozilla/gecko-dev/obj-ff-dbg/js/src/config.status" && touch "/Users/mozilla/gecko-dev/obj-ff-dbg/js/src/config.status" && touch "/Users/mozilla/gecko-dev/obj-ff-dbg/js/src/config.status"'
+
+# Check if we're a child of $MOZ_BRANCH
+check_moz_dirty() {
+  if $(git merge-base --is-ancestor "$MOZ_BRANCH" $(git rev-parse HEAD)) ; then
+    return 0
+  else
+    echo "Directory is dirty: rebase on $MOZ_BRANCH"
+    return 1
+  fi
+}
+# These commands are so that I make sure I do rebase after pulling chages from upstream before building.
+mb() {
+  check_moz_dirty && mach build "$@"
+}
+mr() {
+  check_moz_dirty && mach run "$@"
+}
+mt() {
+  check_moz_dirty && mach test "$@"
+}
+alias mrp='mr -profile' # mrp /tmp/some_profile
+alias mrP='mr -P' # open profile manager
+alias mrd='mr --jsdebugger' # run with debugger
+# This requires having hg-fx-team mercurial repo.
+alias push-to-try='git-push-to-try -t -r "$MOZ_BRANCH"..HEAD ~/hg-fx-team "-b do -p linux,linux64,linux64-asan,linux64-st-an,linux64-valgrind,linux64-br-haz,linux64-mulet,macosx64,win32 -u xpcshell,mochitests -t none"'
+
+# Silence some compilation warnings.
+# TODO: review what it _really_ does:
+export MOZ_QUIET=1
+export MOZ_IGNORE_WARNINGS=1
