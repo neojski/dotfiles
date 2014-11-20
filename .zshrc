@@ -58,3 +58,6 @@ alias o='open'
 # http://unix.stackexchange.com/questions/30168/how-to-enable-ctrl-r-in-zsh/30169#30169
 bindkey -v
 bindkey ^R history-incremental-search-backward
+
+# trash
+# npm install --global trash
