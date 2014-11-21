@@ -29,7 +29,7 @@ bashcompinit
 source "$MOZ/python/mach/bash-completion.sh"
 # Env variable required by mach-watch
 export MACH_COMMAND="$MOZ/mach"
-alias mach="$MACH_COMMAND" # mach autocompletion does not work if ~. TODO: investigate why.
+alias mach=$HOME'/mach-watch/mach' # mach autocompletion does not work if ~. TODO: investigate why.
 # requires https://github.com/neojski/mach-watch
 alias mach-watch='~/mach-watch/mach-watch ~/gecko-dev'
 alias mach-autobuild='~/mach-watch/mach-autobuild'
@@ -60,7 +60,8 @@ alias mrp='mr -profile' # mrp /tmp/some_profile
 alias mrP='mr -P' # open profile manager
 alias mrd='mr --jsdebugger' # run with debugger
 # This requires having hg-fx-team mercurial repo.
-alias push-to-try='git-push-to-try -t -r "$MOZ_BRANCH"..HEAD ~/hg-fx-team "-b do -p linux,linux64,linux64-asan,linux64-st-an,linux64-valgrind,linux64-br-haz,linux64-mulet,macosx64,win32 -u xpcshell,mochitests -t none"'
+alias push-to-try='git-push-to-try -t -r "$MOZ_BRANCH"..HEAD ~/hg-fx-team "-b do -p linux,linux64,macosx64,win32 -u xpcshell,mochitests"'
+
 
 # Silence some compilation warnings.
 # TODO: review what it _really_ does:

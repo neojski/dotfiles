@@ -41,10 +41,11 @@ source "$HOME/z/z.sh"
 # Set vim as default editor
 export EDITOR=vim
 
-# export CDPATH=~:~/Dropbox
+# cd into ~ directories
+export CDPATH=~
 
 # Reload .zshrc.
-alias rl='source ~/.zshrc'
+alias rl='sh ~/dotfiles/bootstrap.sh && source ~/.zshrc'
 alias l='ls -lA'
 alias ....='cd ../../..'
 alias sudo='sudo ' # TODO: review. This is so sudo works with aliases (if alias ends in a space then bash tries to do alias substitution on the next word in the command line).
