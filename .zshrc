@@ -62,3 +62,7 @@ bindkey ^R history-incremental-search-backward
 
 # trash
 # npm install --global trash
+#
+
+# tmux 256 color support (http://unix.stackexchange.com/questions/1045/getting-256-colors-to-work-in-tmux)
+alias tmux='TERM=xterm-256color tmux'
