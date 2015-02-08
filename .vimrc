@@ -44,6 +44,7 @@ let mapleader = ","
 let maplocalleader = ",,"
 
 " moving between buffers
+" noremap = ("" = all modes [n = normal; v = visual; i = insert])(nore = non-recursive)(map)
 noremap <C-h> <C-w>h<CR>
 noremap <C-j> <C-w>j<CR>
 noremap <C-k> <C-w>k<CR>
