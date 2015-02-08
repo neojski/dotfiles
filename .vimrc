@@ -50,6 +50,10 @@ noremap <C-j> <C-w>j<CR>
 noremap <C-k> <C-w>k<CR>
 noremap <C-l> <C-w>l<CR>
 
+" moving between tabs
+noremap <C-n> <esc>gt
+noremap <C-p> <esc>gT
+
 " line nubering
 set number
 
