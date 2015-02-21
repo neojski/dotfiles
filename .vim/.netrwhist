@@ -1,9 +1,0 @@
-let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =7
-let g:netrw_dirhist_1='/home/neo/pouchdb/node_modules'
-let g:netrw_dirhist_2='/home/neo/pouchdb/my_utils'
-let g:netrw_dirhist_3='/home/neo/.vim/bundle'
-let g:netrw_dirhist_4='/home/neo/random/functional-programming'
-let g:netrw_dirhist_5='/home/neo/firefox'
-let g:netrw_dirhist_6='/home/neo/mach-watch/node_modules'
-let g:netrw_dirhist_7='/home/neo/eclipseworkspace'
