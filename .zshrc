@@ -66,3 +66,20 @@ bindkey ^R history-incremental-search-backward
 
 # tmux 256 color support (http://unix.stackexchange.com/questions/1045/getting-256-colors-to-work-in-tmux)
 alias tmux='TERM=xterm-256color tmux'
+
+# emacs bindings in bash (some):
+# c-a: beggining of line
+# c-e: end of line
+# c-f: forward char
+# c-b: backward char
+# m-f: forward word
+# m-b: backward word
+# c-p: previous command
+# c-n: next command
+# m-d: delete word forward
+#
+# plus standard commands
+# c-w: delete word backwards
+# c-h: delete char backwards
+# c-u: delete line backward
+set -o emacs
