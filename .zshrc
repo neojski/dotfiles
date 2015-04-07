@@ -14,7 +14,7 @@ esac
 source ~/.zshrc-oh-my-zsh
 
 # Firefox development tools with focus on fx-team repository.
-source ~/.zshrc-mozilla
+# source ~/.zshrc-mozilla
 
 if [ "$os" = 'mac' ]; then
   alias subl='/Applications/Sublime\ Text\ 2.app/Contents/SharedSupport/bin/subl'
@@ -29,14 +29,15 @@ fi
 . ~/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
 
 # idea: keep track of cd history and then build some suggestions using that
-cd() {
-  echo $(date +"%s") $PWD "$@" >> "$HOME/.cd_log"
-  builtin cd "$@"
-}
-
+# cd() {
+#   echo $(date +"%s") $PWD "$@" >> "$HOME/.cd_log"
+#   builtin cd "$@"
+# }
+#
 # And then I've found z
 # requires https://github.com/rupa/z
-source "$HOME/z/z.sh"
+# source "$HOME/z/z.sh"
+# I stopped using it for some reason. Maybe because of ctrlp-like vim plugin
 
 # Set vim as default editor
 export EDITOR=vim
