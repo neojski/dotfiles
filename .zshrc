@@ -84,3 +84,9 @@ alias tmux='TERM=xterm-256color tmux'
 # c-h: delete char backwards
 # c-u: delete line backward
 set -o emacs
+
+# Virtually infinite history
+HISTSIZE=999999999
+SAVEHIST=999999999
+
+alias top=htop

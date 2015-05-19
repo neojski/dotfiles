@@ -97,6 +97,7 @@ NeoBundle 'Shougo/neomru.vim'
 NeoBundle 'bling/vim-airline'
 NeoBundle 'godlygeek/tabular'
 NeoBundle 'rust-lang/rust.vim'
+NeoBundle 'tpope/vim-surround'
 
 " You can specify revision/branch/tag.
 NeoBundle 'Shougo/vimshell', { 'rev' : '3787e5' }
@@ -112,3 +113,14 @@ filetype plugin indent on
 NeoBundleCheck
 "End NeoBundle Scripts-------------------------
 "
+
+set ignorecase
+
+" https://github.com/joyent/node/issues/3172#issuecomment-31125703
+set backupcopy=yes
+
+" http://usevim.com/2013/01/04/vim101-jumping/
+set suffixesadd+=.js
+
+" let me open more than 10 tabs with vim -p
+set tabpagemax=100
