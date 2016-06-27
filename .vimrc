@@ -29,16 +29,14 @@ au BufNewFile,BufRead *.hbs set filetype=html
 "execute "set rtp+=" . g:opamshare . "/merlin/vim"
 
 " http://stackoverflow.com/questions/15514908/which-is-the-current-setup-to-use-ocaml-in-vim
-filetype indent on
-filetype plugin on
-au BufRead,BufNewFile *.ml,*.mli compiler ocaml
-syntax on
-
-" http://www.typerex.org/ocp-indent.html
-autocmd FileType ocaml source /home/neo/.opam/system/share/vim/syntax/ocp-indent.vim
+"filetype indent on
+"filetype plugin on
+"au BufRead,BufNewFile *.ml,*.mli compiler ocaml
+"syntax on
 
 " ctrlp http://ctrlpvim.github.io/ctrlp.vim
-set runtimepath^=~/.vim/bundle/ctrlp.vim
+set runtimepath^="~/.vim/bundle/ctrlp.vim"
+
 
 let mapleader = ","
 let maplocalleader = ",,"
@@ -69,52 +67,52 @@ set laststatus=2
 " don't wait till I click <CR> to do start searching
 set incsearch
 
-"NeoBundle Scripts-----------------------------
-if has('vim_starting')
-  if &compatible
-    set nocompatible               " Be iMproved
-  endif
+set ignorecase
 
-  " Required:
-  set runtimepath+=/home/neo/.vim/bundle/neobundle.vim/
+
+"dein Scripts-----------------------------
+if &compatible
+ set nocompatible               " Be iMproved
 endif
 
 " Required:
-call neobundle#begin(expand('/home/neo/.vim/bundle'))
-
-" Let NeoBundle manage NeoBundle
-" Required:
-NeoBundleFetch 'Shougo/neobundle.vim'
-
-" Add or remove your Bundles here:
-NeoBundle 'Shougo/neosnippet.vim'
-NeoBundle 'Shougo/neosnippet-snippets'
-NeoBundle 'tpope/vim-fugitive'
-NeoBundle 'ctrlpvim/ctrlp.vim'
-NeoBundle 'flazz/vim-colorschemes'
-NeoBundle 'Shougo/unite.vim'
-NeoBundle 'Shougo/neomru.vim'
-NeoBundle 'bling/vim-airline'
-NeoBundle 'godlygeek/tabular'
-NeoBundle 'rust-lang/rust.vim'
-NeoBundle 'tpope/vim-surround'
-
-" You can specify revision/branch/tag.
-NeoBundle 'Shougo/vimshell', { 'rev' : '3787e5' }
+set runtimepath^=~/vim-dein/repos/github.com/Shougo/dein.vim
 
 " Required:
-call neobundle#end()
+call dein#begin(expand('vim-dein'))
+
+" Let dein manage dein
+" Required:
+call dein#add('Shougo/dein.vim')
+
+" Add or remove your plugins here:
+call dein#add('Shougo/neosnippet.vim')
+call dein#add('Shougo/neosnippet-snippets')
+call dein#add('tpope/vim-fugitive')
+call dein#add('ctrlpvim/ctrlp.vim')
+call dein#add('flazz/vim-colorschemes')
+call dein#add('Shougo/unite.vim')
+call dein#add('Shougo/neomru.vim')
+call dein#add('bling/vim-airline')
+call dein#add('godlygeek/tabular')
+call dein#add('rust-lang/rust.vim')
+call dein#add('tpope/vim-surround')
+
+" Required:
+call dein#end()
 
 " Required:
 filetype plugin indent on
 
-" If there are uninstalled bundles found on startup,
-" this will conveniently prompt you to install them.
-NeoBundleCheck
-"End NeoBundle Scripts-------------------------
-"
+" If you want to install not installed plugins on startup.
+" if dein#check_install()
+"   call dein#install()
+" endif
 
-set ignorecase
+"End dein Scripts-------------------------
+
+
+
 
 " https://github.com/joyent/node/issues/3172#issuecomment-31125703
 set backupcopy=yes
@@ -127,3 +125,11 @@ set tabpagemax=100
 
 " set cwd to current file
 set autochdir
+
+" merlin
+"let g:opamshare = substitute(system('opam config var share'),'\n$','','''')
+"execute "set rtp+=" . g:opamshare . "/merlin/vim"
+"
+execute "set rtp+=/home/neo/repos/merlin/vim/vimbufsync"
+execute "set rtp+=/home/neo/repos/merlin/vim/merlin"
+set rtp^="/home/neo/.opam/system/share/ocp-indent/vim"
