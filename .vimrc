@@ -124,3 +124,6 @@ set suffixesadd+=.js
 
 " let me open more than 10 tabs with vim -p
 set tabpagemax=100
+
+" set cwd to current file
+set autochdir
