@@ -39,7 +39,7 @@ values."
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
      ivy
-     ;; auto-completion
+     auto-completion
      ;; better-defaults
      emacs-lisp
      ;; git
@@ -312,23 +312,34 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
-  (require 'fzf)
-
   (defun tomasz-rg-fzf (dir)
+    "Run fzf using rg as the file search engine. Use prefix argument to make search unrestricted (that is, search hidden files)."
     (interactive)
-    (let* ((prefix (prefix-numeric-value current-prefix-arg))
-           (extra_args (if prefix (concat "-" (s-repeat prefix "u")) ""))
-           (command (format "rg --files %s %s" dir extra_args)))
-      (message "%s" command)
-        (fzf/start dir command)
+    (let* ((start-dir default-directory)
+           (extra_args (if current-prefix-arg (concat "-" (s-repeat (prefix-numeric-value current-prefix-arg) "u")) ""))
+           (short-dir (file-relative-name dir start-dir))
+           (command
+            ;; pipe stderr to /dev/null to hide "permission denied" errors printed by rg
+            (format "rg --files %s %s 2> /dev/null" short-dir extra_args)))
+
+
+        (fzf/start start-dir command)
+        (setq mode-line-format (format "    %s$ %s" start-dir command))
         (turn-off-evil-mode)))
+
+  (defun tomasz-rg-fzf-choose ()
+    (interactive)
+    (tomasz-rg-fzf (read-file-name "Dir to search from: ")))
 
   (defun tomasz-rg-fzf-example ()
     (interactive)
     (tomasz-rg-fzf default-directory))
 
   (spacemacs/set-leader-keys "of" 'tomasz-rg-fzf-example)
-  ;; TODO: fzf does't work with files that have : in them
+
+
+  ;; Don't start suggestions with "^"
+  (setq ivy-initial-inputs-alist nil)
 )
 
 ;; Do not write anything past this comment. This is where Emacs will
