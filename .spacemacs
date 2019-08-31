@@ -313,7 +313,11 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
   (defun tomasz-rg-fzf (dir)
-    "Run fzf using rg as the file search engine. Use prefix argument to make search unrestricted (that is, search hidden files)."
+    "Run fzf using rg as the file search engine.
+
+     Search is shown relative to default-directory.
+
+     Use prefix argument to make search unrestricted (that is, search hidden files)."
     (interactive)
     (let* ((start-dir default-directory)
            (extra_args (if current-prefix-arg (concat "-" (s-repeat (prefix-numeric-value current-prefix-arg) "u")) ""))
