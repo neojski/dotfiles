@@ -312,6 +312,9 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
+  ;; This requires my fork of fzf.el: https://github.com/neojski/fzf.el/
+  (load "~/repos/fzf.el/fzf.el")
+
   (defun tomasz-rg-fzf (dir)
     "Run fzf using rg as the file search engine.
 
