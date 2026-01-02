@@ -32,7 +32,8 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(typescript
+   '(python
+     typescript
      php
      html
      javascript
@@ -58,13 +59,14 @@ This function should only modify configuration layer settings."
      ;; syntax-checking
      treemacs
      ;; version-control
+     tree-sitter
      )
 
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(fzf)
+   dotspacemacs-additional-packages '(fzf po-mode)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -467,7 +469,7 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
   ;; This requires my fork of fzf.el: https://github.com/neojski/fzf.el/
-  ;(load "~/repos/fzf.el/fzf.el")
+                                        ;(load "~/repos/fzf.el/fzf.el")
 
 
   (defun tomasz-rg-fzf (dir)
@@ -484,9 +486,9 @@ you should place your code here."
             ;; pipe stderr to /dev/null to hide "permission denied" errors printed by rg
             (format "rg --files %s%s 2> /dev/null" short-dir extra_args)))
 
-        (fzf/start start-dir command)
-        (setq mode-line-format (format "    %s$ %s" start-dir command))
-        (turn-off-evil-mode)))
+      (fzf/start start-dir command)
+      (setq mode-line-format (format "    %s$ %s" start-dir command))
+      (turn-off-evil-mode)))
 
 
   (abbreviate-file-name
@@ -513,14 +515,62 @@ you should place your code here."
   (add-to-list 'load-path "/home/neo/.opam/ocaml-base-compiler/share/emacs/site-lisp")
   (require 'ocp-indent)
 
-  (require 'ocamlformat) 
+  (require 'ocamlformat)
 
   ;; elscreen stuff?
   (define-key evil-normal-state-map (kbd "g t") 'elscreen-next)
   (define-key evil-normal-state-map (kbd "g T") 'elscreen-previous)
   (define-key evil-normal-state-map (kbd "C-<prior>") 'elscreen-previous)
   (define-key evil-normal-state-map (kbd "C-<next>") 'elscreen-next)
-)
+
+  (defun my-shell-command-on-region-with-prefix (start end)
+    "Run `shell-command-on-region` with a prefix argument."
+    (interactive "r")
+    (let ((current-prefix-arg '(4)))  ; Set prefix argument (4 represents C-u)
+      (message "yes")
+      (call-interactively 'shell-command-on-region)))
+
+  (define-key evil-visual-state-map (kbd "!") 'my-shell-command-on-region-with-prefix)
+
+  (add-to-list 'load-path "/home/neo/repos/evil-textobj-tree-sitter")
+  (require 'evil-textobj-tree-sitter)
+
+  ;; bind `function.outer`(entire function block) to `f` for use in things like `vaf`, `yaf`
+  (define-key evil-outer-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.outer"))
+  ;; bind `function.inner`(function block without name and args) to `f` for use in things like `vif`, `yif`
+  (define-key evil-inner-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.inner"))
+
+  ;; Goto start of next function
+  (define-key evil-normal-state-map
+              (kbd "]f")
+              (lambda ()
+                (interactive)
+                (evil-textobj-tree-sitter-goto-textobj "function.outer")))
+
+  ;; Goto start of previous function
+  (define-key evil-normal-state-map
+              (kbd "[f")
+              (lambda ()
+                (interactive)
+                (evil-textobj-tree-sitter-goto-textobj "function.outer" t)))
+
+  ;; Goto end of next function
+  (define-key evil-normal-state-map
+              (kbd "]F")
+              (lambda ()
+                (interactive)
+                (evil-textobj-tree-sitter-goto-textobj "function.outer" nil t)))
+
+  ;; Goto end of previous function
+  (define-key evil-normal-state-map
+              (kbd "[F")
+              (lambda ()
+                (interactive)
+                (evil-textobj-tree-sitter-goto-textobj "function.outer" t t)))
+
+
+
+  )
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
@@ -543,21 +593,42 @@ you should place your code here."
 This is an auto-generated function, do not modify its content directly, use
 Emacs customize menu instead.
 This function is called at the very end of Spacemacs initialization."
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(fzf/args "-x --color bw --print-query --no-unicode")
- '(js-indent-level 2)
- '(package-selected-packages
-   '(elscreen-tab perspeen evil-tabs ws-butler winum which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smex restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-make helm helm-core google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist highlight evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu elisp-slime-nav dumb-jump popup f dash s diminish define-word counsel-projectile projectile pkg-info epl counsel swiper ivy column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed async aggressive-indent adaptive-wrap ace-window ace-link avy))
- '(web-mode-attr-indent-offset 2)
- '(web-mode-code-indent-offset 2))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-)
+  (custom-set-variables
+   ;; custom-set-variables was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(evil-want-Y-yank-to-eol nil)
+   '(fzf/args "-x --color bw --print-query --no-unicode")
+   '(js-indent-level 2)
+   '(package-selected-packages
+     '(ace-link ace-window adaptive-wrap aggressive-indent anzu async auto-compile
+                auto-highlight-symbol avy bind-key bind-map clean-aindent-mode
+                column-enforce-mode counsel counsel-projectile dash define-word
+                diminish dumb-jump elisp-slime-nav epl eval-sexp-fu evil evil-anzu
+                evil-args evil-ediff evil-escape evil-exchange evil-iedit-state
+                evil-indent-plus evil-lisp-state evil-matchit evil-mc
+                evil-nerd-commenter evil-numbers evil-search-highlight-persist
+                evil-surround evil-tutor evil-unimpaired evil-visual-mark-mode
+                evil-visualstar exec-path-from-shell expand-region eyebrowse f
+                fancy-battery fill-column-indicator flx flx-ido golden-ratio
+                google-translate goto-chg helm helm-core helm-make highlight
+                highlight-indentation highlight-numbers highlight-parentheses
+                hl-todo hungry-delete hydra iedit indent-guide ivy ivy-hydra
+                link-hint linum-relative lorem-ipsum macrostep move-text neotree
+                ocaml-ts-mode open-junk-file org-bullets org-plus-contrib packed
+                paradox parent-mode pcre2el persp-mode pkg-info popup popwin
+                powerline projectile rainbow-delimiters request restart-emacs s
+                smartparens smex spaceline spinner swiper tern tide toc-org
+                tree-sitter tree-sitter-langs tsc undo-tree use-package uuidgen
+                vi-tilde-fringe volatile-highlights vterm wgrep which-key winum
+                ws-butler))
+   '(web-mode-attr-indent-offset 2)
+   '(web-mode-code-indent-offset 2))
+  (custom-set-faces
+   ;; custom-set-faces was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   )
+  )
