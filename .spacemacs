@@ -506,8 +506,51 @@ you should place your code here."
     (interactive)
     (tomasz-rg-fzf "~"))
 
+  (defun tomasz-vterm-start (&optional command)
+    "Start vterm in the current window.
+If COMMAND is non-empty, send it after startup."
+    (vterm (generate-new-buffer-name "*vterm*"))
+    (evil-emacs-state)
+    (when (and command (not (string= command "")))
+      (vterm-send-string command)
+      (vterm-send-return)))
+
+  (defun tomasz-vterm-vertical (&optional command)
+    "Open vterm in a new vertical split.
+If COMMAND is non-empty, send it after startup."
+    (interactive (list (when current-prefix-arg
+                         (read-string "Vterm command: "))))
+    (split-window-right)
+    (other-window 1)
+    (tomasz-vterm-start command))
+
+  (defun tomasz-vterm-frame (&optional command)
+    "Open vterm in a new frame.
+If COMMAND is non-empty, send it after startup."
+    (interactive (list (when current-prefix-arg
+                         (read-string "Vterm command: "))))
+    (select-frame (make-frame))
+    (tomasz-vterm-start command))
+
+  (with-eval-after-load 'vterm
+    (setq vterm-kill-buffer-on-exit t)
+    (defun tomasz-vterm-close-window ()
+      "Close the vterm window (or its frame) when its buffer is killed."
+      (let* ((buf (current-buffer))
+             (win (get-buffer-window buf))
+             (frame (and win (window-frame win))))
+        (when (and (window-live-p win) frame)
+          (if (one-window-p t)
+              (delete-frame frame)
+            (delete-window win)))))
+    (defun tomasz-vterm-setup ()
+      (add-hook 'kill-buffer-hook #'tomasz-vterm-close-window nil t))
+    (add-hook 'vterm-mode-hook #'tomasz-vterm-setup))
+
   (spacemacs/set-leader-keys "of" 'tomasz-rg-fzf-example)
   (spacemacs/set-leader-keys "oF" 'tomasz-rg-fzf-home)
+  (spacemacs/set-leader-keys "ot" 'tomasz-vterm-vertical)
+  (spacemacs/set-leader-keys "oT" 'tomasz-vterm-frame)
 
   ;; Don't start suggestions with "^"
   (setq ivy-initial-inputs-alist nil)
@@ -616,13 +659,12 @@ This function is called at the very end of Spacemacs initialization."
                 highlight-indentation highlight-numbers highlight-parentheses
                 hl-todo hungry-delete hydra iedit indent-guide ivy ivy-hydra
                 link-hint linum-relative lorem-ipsum macrostep move-text neotree
-                ocaml-ts-mode open-junk-file org-bullets org-plus-contrib packed
-                paradox parent-mode pcre2el persp-mode pkg-info popup popwin
-                powerline projectile rainbow-delimiters request restart-emacs s
-                smartparens smex spaceline spinner swiper tern tide toc-org
-                tree-sitter tree-sitter-langs tsc undo-tree use-package uuidgen
-                vi-tilde-fringe volatile-highlights vterm wgrep which-key winum
-                ws-butler))
+                open-junk-file org-bullets org-plus-contrib packed paradox
+                parent-mode pcre2el persp-mode pkg-info popup popwin powerline
+                projectile rainbow-delimiters request restart-emacs s smartparens
+                smex spaceline spinner swiper tern tide toc-org undo-tree
+                use-package uuidgen vi-tilde-fringe volatile-highlights vterm
+                wgrep which-key winum ws-butler))
    '(web-mode-attr-indent-offset 2)
    '(web-mode-code-indent-offset 2))
   (custom-set-faces
